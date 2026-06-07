@@ -1,252 +1,95 @@
 # OpenHealth Transparency (OHT)
 
-### Making public healthcare systems accountable through transparent, evidence-based technology.
+**Evidence-based visibility into the availability of critical medical equipment in Sri Lanka's public hospitals.**
 
+OHT is an open-source platform that records, verifies, and publicly presents the operational status of critical medical devices (MRI, CT, surgical equipment, etc.) in government hospitals. It exists to close an information gap: today, patients have no way to confirm whether a device is genuinely unavailable, how long it has been down, or when it will be restored.
 
-## Overview
+This is **not an accusation platform**. Only verified, evidence-backed information becomes public. See [docs/01-rationale.md](docs/01-rationale.md) for the full motivation.
 
-OpenHealth Transparency (OHT) is an open-source platform designed to track, verify, and publicly present the operational status of critical medical devices in public healthcare systems.
+## Project Status
 
-The goal is to reduce information asymmetry by providing **evidence-based visibility** into equipment availability, downtime, and repair processes.
+🚧 **Pre-MVP — rebuilding from a clean slate.** The documentation in [`/docs`](docs/) is the blueprint for the implementation. Nothing described below should be assumed to exist in code yet.
 
+## How It Works
 
-## Why This Project Exists
+1. **Registry** — hospitals and their critical devices are catalogued.
+2. **Reporting** — incidents (breakdowns, unavailability) are reported with supporting evidence.
+3. **Verification** — a controlled workflow validates reports before anything is published.
+4. **Public portal** — citizens see verified device status, downtime history, and resolutions.
+5. **Audit trail** — every action is recorded and traceable.
 
-In many public healthcare systems, patients face uncertainty due to lack of reliable information about medical equipment availability.
+## Tech Stack (decided)
 
-This project focuses on solving that problem through:
+| Layer | Choice |
+|---|---|
+| Public portal | Next.js (App Router) + TypeScript + Tailwind CSS |
+| Admin portal | Next.js (App Router) + TypeScript + Tailwind CSS |
+| API | Python, FastAPI |
+| Database | PostgreSQL |
+| Object storage (evidence) | S3-compatible storage |
+| Auth | JWT + role-based access control |
 
-* Transparency
-* Accountability
-* Structured data
-* Evidence-based reporting
+Rationale for each choice: [docs/03-tech-stack.md](docs/03-tech-stack.md)
 
-This is not an accusation platform. It is a **visibility and trust platform**.
-
-
-
-## Key Features (MVP)
-
-* Hospital and device registry
-* Device status tracking
-* Incident reporting with evidence upload
-* Verification and approval workflow
-* Public transparency portal (verified data only)
-* Full audit trail
-
-
-
-## Tech Stack
-
-### Frontend
-
-* Next.js (App Router)
-* TypeScript
-* Tailwind CSS + shadcn/ui
-
-### Backend
-
-* Python (FastAPI)
-* REST API
-* Background workers (Celery / RQ)
-
-### Database
-
-* MariaDB
-
-### Storage
-
-* AWS S3
-
-### Authentication
-
-* JWT + Role-Based Access Control
-
-### Hosting
-
-* Frontend: Vercel
-* Backend: AWS (ECS / EC2)
-* Database: AWS RDS (MariaDB)
-
-
-
-## High-Level Architecture
-
-### Client Applications
-
-* Public Web Portal
-* Admin Web Portal
-* Mobile App (future)
-
-### Backend Services
-
-* API Layer (FastAPI)
-* Verification Workflow Engine
-* Notification Service
-
-### Data Layer
-
-* Relational Database (MariaDB)
-* Object Storage (S3)
-
-
-
-## Project Structure (Monorepo)
+## Repository Layout
 
 ```
 /apps
-  /web-public
-  /web-admin
-  /api
-
+  /web-public     Public transparency portal (Next.js)
+  /web-admin      Admin & verification portal (Next.js)
+  /api            FastAPI backend
 /packages
-  /ui
-  /types
-  /utils
-  /config
+  /types          Shared TypeScript types
+  /ui             Shared UI components
+  /utils          Shared utilities
+  /config         Shared tooling config
+/docs             Project documentation (start here)
 ```
 
+## Documentation
 
+| Doc | Purpose |
+|---|---|
+| [01-rationale.md](docs/01-rationale.md) | Why this project exists |
+| [02-architecture.md](docs/02-architecture.md) | System architecture |
+| [03-tech-stack.md](docs/03-tech-stack.md) | Stack decisions and rationale |
+| [04-data-model.md](docs/04-data-model.md) | Database schema |
+| [05-api-spec.md](docs/05-api-spec.md) | API contracts |
+| [06-roles-permissions.md](docs/06-roles-permissions.md) | Roles and access control |
+| [07-verification-workflow.md](docs/07-verification-workflow.md) | Report lifecycle and verification |
+| [08-roadmap.md](docs/08-roadmap.md) | Phased delivery plan |
+| [design/design-system.md](docs/design/design-system.md) | "Civic Ledger" design system |
 
-## Getting Started
+## Getting Started (once code lands)
 
-### Prerequisites
+Prerequisites: Node.js 20+, pnpm, Python 3.11+, PostgreSQL 15+.
 
-* Node.js 18+
-* Python 3.10+
-* MariaDB
-* Docker (optional)
-
-### Setup
-
-```
+```bash
 git clone https://github.com/your-org/openhealth-transparency
 cd openhealth-transparency
+pnpm install                       # frontend workspaces
+cd apps/api && pip install -r requirements.txt
 ```
 
-### Install Dependencies
+Run dev servers:
 
-```
-# frontend
-npm install
-
-# backend
-cd apps/api
-pip install -r requirements.txt
+```bash
+pnpm dev                           # web apps
+uvicorn main:app --reload          # API (from apps/api)
 ```
 
-### Run Development
+## Contributing
 
-```
-# frontend
-npm run dev
+We welcome engineers, designers, healthcare professionals, and policy experts. Read [CONTRIBUTING.md](CONTRIBUTING.md) first — it covers workflow, coding standards, and where help is needed most.
 
-# backend
-uvicorn main:app --reload
-```
+## Governance
 
-
-
-## Contribution Guidelines
-
-We welcome contributions from developers, designers, and domain experts.
-
-### How to Contribute
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Submit a pull request
-
-### Contribution Areas
-
-* Frontend UI
-* Backend APIs
-* Data modeling
-* Verification workflows
-* Security improvements
-* Documentation
-
-
-
-## Coding Standards
-
-* TypeScript-first frontend
-* Python backend with type hints
-* Modular architecture
-* Small, focused pull requests
-* Document APIs
-
-
-
-## Roadmap
-
-### Phase 1 (MVP)
-
-* Device registry
-* Status tracking
-* Basic verification workflow
-* Public portal
-
-### Phase 2
-
-* Alerts and escalation
-* Analytics dashboards
-* Role refinement
-
-### Phase 3
-
-* Integrations
-* Predictive insights
-* Multi-country support
-
-
-
-## Governance Model
-
-Maintainer-led open governance:
-
-* Core maintainers review PRs
-* Contributors can become maintainers
-* Major changes via proposals
-
-
+Maintainer-led open governance: core maintainers review PRs, active contributors can become maintainers, and major changes go through written proposals.
 
 ## License
 
-MIT License (recommended)
-
-
+MIT — see [LICENSE](LICENSE).
 
 ## Disclaimer
 
-This system provides structured, evidence-based visibility into healthcare equipment status.
-
-It does not make accusations and does not replace official investigations.
-
-
-
-## Call for Contributors
-
-We are looking for:
-
-* Software engineers
-* Designers
-* Healthcare professionals
-* Policy experts
-
-If you believe in building transparent public systems, join us.
-
-
-
-## Next Steps
-
-* Define API contracts
-* Design database schema
-* Create UI wireframes
-* Initialize monorepo
-* Create GitHub issues
-
-
-
-**OpenHealth Transparency — Building trust through systems.**
+OHT provides structured, evidence-based visibility into healthcare equipment status. It does not make accusations, assume misconduct, or replace official investigations or regulatory processes.
